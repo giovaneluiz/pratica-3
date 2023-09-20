@@ -19,8 +19,8 @@ app.get('/movies', (req, res) => {
             console.error(err);
             return res.status(500).json({ error: 'Erro ao buscar dados do banco de dados' });
         }
-        res.render('movies', {movies: results})
-        // res.json(results); // Envia os resultados como resposta no formato JSON
+        // res.render('movies', {movies: results})
+        res.json(results); // Envia os resultados como resposta no formato JSON
     });
 });
 
@@ -43,8 +43,7 @@ app.get('/movies/:id', (req, res) => {
 });
 
 // Rota para inserir um novo filme
-app.post('/new', async (req, res) => {
-    console.log(req.body)
+app.post('/new', async (req, res) => {    
     try {
         const { titulo, sinopse, duracao, imagem, dataLancamento } = req.body;
         if (!titulo || !sinopse || !duracao || !imagem || !dataLancamento) {
@@ -54,10 +53,10 @@ app.post('/new', async (req, res) => {
         // Decodifica a imagem base64 para binário
         const imagemBinario = Buffer.from(imagem, 'base64');
 
-        // const query = 'INSERT INTO `movies` (titulo, sinopse, duracao, imagem, dataLancamento) VALUES (?, ?, ?, ?, ?)';
+        const query = 'INSERT INTO `movies` (titulo, sinopse, duracao, imagem, dataLancamento) VALUES (?, ?, ?, ?, ?)';
         const values = [titulo, sinopse, duracao, imagemBinario, dataLancamento];
 
-        // const [result] = connection.query(query, values);
+        connection.query(query, values);
 
         res.status(201).json({ message: 'Filme inserido com sucesso' });
     } catch (error) {
